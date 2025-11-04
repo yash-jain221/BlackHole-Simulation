@@ -16,8 +16,11 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{54a26eb4-13b2-4595-9d02-39fdd8edc747}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resources">
-      <UniqueIdentifier>{e6ae72a7-51c3-4d1c-958b-fa3b064a6ee0}</UniqueIdentifier>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{fe735d21-8a3d-4018-bee6-b34f13a9755f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\bunny">
+      <UniqueIdentifier>{18f0d0db-2d35-4f35-a980-053a07da38ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +51,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -61,6 +67,15 @@
     </None>
     <None Include="light.frag">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="need_some_space\scene.gltf">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="scene.bin">
+      <Filter>Resources\bunny</Filter>
+    </None>
+    <None Include="scene.gltf">
+      <Filter>Resources\bunny</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +107,12 @@
     </Image>
     <Image Include="brick.png">
       <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="metallicRoughness.png">
+      <Filter>Resources\bunny</Filter>
+    </Image>
+    <Image Include="baseColor.png">
+      <Filter>Resources\bunny</Filter>
     </Image>
   </ItemGroup>
 </Project>

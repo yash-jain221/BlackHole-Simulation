@@ -33,7 +33,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	// Compile the Vertex Shader into machine code
 	glCompileShader(vertexShader);
-	
+	// Checks if Shader compiled succesfully
 	compileErrors(vertexShader, "VERTEX");
 
 	// Create Fragment Shader Object and get its reference
@@ -66,7 +66,6 @@ void Shader::Activate()
 	glUseProgram(ID);
 }
 
-// Deletes the Shader Program
 void Shader::Delete()
 {
 	glDeleteProgram(ID);

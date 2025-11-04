@@ -13,7 +13,7 @@ in vec3 Normal;
 in vec3 crntPos;
 
 // Gets the Texture Unit from the main function
-uniform sampler2D tex0;
+uniform sampler2D diffuse0;
 uniform vec4 lightColor;
 // Gets the position of the light from the main function
 uniform vec3 lightPos;
@@ -31,5 +31,5 @@ void main()
 
 	float specIntensity = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
 	float intensity = max(dot(surfaceNormal, lightDir), 0.0f);
-	FragColor = texture(tex0, texCoord) * lightColor * (intensity + ambient + specIntensity); 
+	FragColor = texture(diffuse0, texCoord) * lightColor * (intensity + ambient + specIntensity); 
 }
