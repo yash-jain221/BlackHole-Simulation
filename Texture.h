@@ -15,6 +15,7 @@ public:
 	GLuint unit;
 
 	Texture(GLuint id, std::string texType, std::string tex_path);
+	Texture(const char* image, const char* texType, GLuint slot, GLenum format, GLenum pixelType);
 
 	// Assigns a texture unit to a texture
 	void texUnit(Shader& shader, const char* uniform, GLuint unit);

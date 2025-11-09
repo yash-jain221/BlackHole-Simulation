@@ -14,6 +14,7 @@ struct Vertex {
 	glm::vec2 texUV;
 };
 
+
 class VBO
 {
 public:

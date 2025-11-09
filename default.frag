@@ -4,8 +4,6 @@
 out vec4 FragColor;
 
 
-// Inputs the color from the Vertex Shader
-in vec3 color;
 // Inputs the texture coordinates from the Vertex Shader
 in vec2 texCoord;
 in vec3 Normal;
@@ -13,7 +11,7 @@ in vec3 Normal;
 in vec3 crntPos;
 
 // Gets the Texture Unit from the main function
-uniform sampler2D diffuse0;
+uniform sampler2D diffuse1;
 uniform vec4 lightColor;
 // Gets the position of the light from the main function
 uniform vec3 lightPos;
@@ -31,5 +29,5 @@ void main()
 
 	float specIntensity = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
 	float intensity = max(dot(surfaceNormal, lightDir), 0.0f);
-	FragColor = texture(diffuse0, texCoord) * lightColor * (intensity + ambient + specIntensity); 
+	FragColor = texture(diffuse1, texCoord)  * lightColor * (intensity + ambient + specIntensity); 
 }

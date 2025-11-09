@@ -2,52 +2,38 @@
 
 #include"Model.h"
 
-const unsigned int width = 800;
-const unsigned int height = 800;
+const unsigned int width = 1600;
+const unsigned int height = 1600;
 
-// Vertices coordinates
-Vertex vertices[] = { //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
-};
 
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3
-};
-
-Vertex lightVertices[] = 
-{ //     COORDINATES     //
-	Vertex{glm::vec3(-0.1f, -0.1f, 0.1f)},
-	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f, 0.1f)},
-	Vertex{glm::vec3(-0.1f, 0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f, 0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f, 0.1f)}
-
-};
-
-GLuint lightIndices[] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	0, 4, 7,
-	0, 7, 3,
-	3, 7, 6,
-	3, 6, 2,
-	2, 6, 5,
-	2, 5, 1,
-	1, 5, 4,
-	1, 4, 0,
-	4, 5, 6,
-	4, 6, 7
-};
+//Vertex lightVertices[] = 
+//{ //     COORDINATES     //
+//	Vertex{glm::vec3(-0.1f, -0.1f, 0.1f)},
+//	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+//	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+//	Vertex{glm::vec3(0.1f, -0.1f, 0.1f)},
+//	Vertex{glm::vec3(-0.1f, 0.1f,  0.1f)},
+//	Vertex{glm::vec3(-0.1f, 0.1f, -0.1f)},
+//	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+//	Vertex{glm::vec3(0.1f,  0.1f, 0.1f)}
+//
+//};
+//
+//GLuint lightIndices[] =
+//{
+//	0, 1, 2,
+//	0, 2, 3,
+//	0, 4, 7,
+//	0, 7, 3,
+//	3, 7, 6,
+//	3, 6, 2,
+//	2, 6, 5,
+//	2, 5, 1,
+//	1, 5, 4,
+//	1, 4, 0,
+//	4, 5, 6,
+//	4, 6, 7
+//};
 
 
 int main()
@@ -79,54 +65,60 @@ int main()
 	gladLoadGL();
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, 1600, 1600);
 
-
+	Shader blackHoleShader("bh.vert", "bh.frag");
+	Shader spaceShipShader("ss.vert", "ss.frag");
 
 	//// Original code from the tutorial
 	//Texture textures[]
 	//{
-	//	Texture("brick.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+	//	Texture("brick.png", "diffuse", 1, GL_RGBA, GL_UNSIGNED_BYTE),
 	//};
 
 
-	// Generates Shader object using shaders default.vert and default.frag
-	Shader shaderProgram("default.vert", "default.frag");
-	// Store mesh data in vectors for the mesh
-	//Vertex verts(vertices);
+	//// Generates Shader object using shaders default.vert and default.frag
+	//Shader shaderProgram("default.vert", "default.frag");
+	//// Store mesh data in vectors for the mesh
+	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	//std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-	//// Create floor mesh
+	////// Create floor mesh
 	//Mesh floor(verts, ind, tex);
 
 
-	//// Shader for light cube
+	////// Shader for light cube
 	//Shader lightShader("light.vert", "light.frag");
-	//// Store mesh data in vectors for the mesh
-	//Vertex lightVerts(lightVertices);
+	////// Store mesh data in vectors for the mesh
+	//std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	//std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
-	//// Create light mesh
+	////// Create light mesh
 
 	//Mesh light(lightVerts, lightInd, tex);
 
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPos);
+	//glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	//glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	//glm::mat4 lightModel = glm::mat4(1.0f);
+	//lightModel = glm::translate(lightModel, lightPos);
 
-	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::mat4 objectModel = glm::mat4(1.0f);
-	objectModel = glm::translate(objectModel, objectPos);
+	//glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	//glm::mat4 objectModel = glm::mat4(1.0f);
+	//objectModel = glm::translate(objectModel, objectPos);
 
 
 	/*lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
-	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	
-	shaderProgram.Activate();
+	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);*/
+
+	/*shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);*/
+
+
+
+
+
 
 
 	// Enables the Depth Buffer
@@ -134,6 +126,9 @@ int main()
 
 	// Creates camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+
+	Model blackHole = Model("bh/BlackHole.obj");
+	Model spaceShip = Model("spaceship/spaceship.obj");
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -143,16 +138,30 @@ int main()
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-		// Handles camera inputs
+		//// Handles camera inputs
 		camera.Inputs(window);
-		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		//// Updates and exports the camera matrix to the Vertex Shader
+		camera.updateMatrix(45.0f, 0.1f, 10000.0f);
 
-		Model mymodel = Model("C:\\Users\\Yash\\Downloads\\survival_guitar_backpack\\survival_guitar_backpack.obj");
-		// Draws different meshes
-		mymodel.Draw(shaderProgram, camera);
-		//light.Draw(lightShader, camera);
+		//// Draws different meshes
+		//floor.DrawMesh(shaderProgram, camera);
+		blackHoleShader.Activate();
+		glm::mat4 modelObject = glm::mat4(1.0f);
+		glm::vec3 modelPos = glm::vec3(0.0f, -10.0f, 20.0f);
+		modelObject = glm::translate(modelObject, modelPos);
+		modelObject = glm::rotate(modelObject, 45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		modelObject = glm::scale(modelObject, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(glGetUniformLocation(blackHoleShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelObject));
+		blackHole.Draw(blackHoleShader, camera);
+
+		spaceShipShader.Activate();
+		glm::mat4 spaceShipModel = glm::mat4(1.0f);
+		glm::vec3 spaceShipPos = glm::vec3(0.0f, 0.0f, 0.0f);
+		spaceShipModel = glm::translate(spaceShipModel, spaceShipPos);
+		spaceShipModel = glm::scale(spaceShipModel, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(glGetUniformLocation(spaceShipShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(spaceShipModel));
+		spaceShip.Draw(spaceShipShader, camera);
+		//light.DrawMesh(lightShader, camera);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
@@ -162,7 +171,8 @@ int main()
 
 
 	// Delete all the objects we've created
-	shaderProgram.Delete();
+	//blackHoleShader.Delete();
+	spaceShipShader.Delete();
 	/*lightShader.Delete();*/
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
