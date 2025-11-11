@@ -32,6 +32,8 @@ void Mesh::DrawMesh(Shader& shader, Camera& camera)
 	// Keep track of how many of each type of textures we have
 	unsigned int numDiffuse = 0;
 	unsigned int numSpecular = 0;
+	unsigned int numHeight = 0;
+	unsigned int numNormal = 0;
 
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
@@ -45,12 +47,39 @@ void Mesh::DrawMesh(Shader& shader, Camera& camera)
 		{
 			num = std::to_string(numSpecular++);
 		}
-		textures[i].texUnit(shader, (type + num).c_str(), i);
+		else if (type == "normal")
+		{
+			num = std::to_string(numNormal++);
+		}
+		else if (type == "height") 
+		{
+			num = std::to_string(numHeight++); 
+		}
+
+		//textures[i].texUnit(shader, (type + num).c_str(), i);
+	}
+	
+	GLuint dc = glGetUniformLocation(shader.ID, "diffuseCount");
+	glUniform1i(dc, numDiffuse);
+
+	for (unsigned int i = 0; i < numDiffuse; i++)
+	{
+		std::string name = "diffuse[" + std::to_string(i) + "]";
+		textures[i].texUnit(shader, name.c_str(), i);
 		textures[i].Bind();
 	}
 
+	GLuint sc = glGetUniformLocation(shader.ID, "specularCount");
+	glUniform1i(sc, numSpecular);
+	for (unsigned int i = 0; i < numSpecular; i++)
+	{
+		std::string name = "specular[" + std::to_string(i) + "]";
+		textures[i].texUnit(shader, name.c_str(), i);
+		textures[i].Bind();
+	}
+	
 	// Take care of the camera Matrix
-	glUniform3f(glGetUniformLocation(shader.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+	//glUniform3f(glGetUniformLocation(shader.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 	camera.createMatrix(shader, "camMatrix");
 
 	// Draw the actual mesh

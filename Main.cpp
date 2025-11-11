@@ -147,10 +147,14 @@ int main()
 		//floor.DrawMesh(shaderProgram, camera);
 		blackHoleShader.Activate();
 		glm::mat4 modelObject = glm::mat4(1.0f);
-		glm::vec3 modelPos = glm::vec3(0.0f, -10.0f, 20.0f);
+		glm::vec3 modelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 		modelObject = glm::translate(modelObject, modelPos);
-		modelObject = glm::rotate(modelObject, 45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		modelObject = glm::scale(modelObject, glm::vec3(0.2f, 0.2f, 0.2f));
+		modelObject = glm::rotate(modelObject, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		modelObject = glm::scale(modelObject, glm::vec3(0.5f, 0.5f, 0.5f));
+
+		modelPos = glm::vec3(100.0f, 200.0f, -5000.0f);
+		modelObject = glm::translate(modelObject, modelPos);
+		 
 		glUniformMatrix4fv(glGetUniformLocation(blackHoleShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelObject));
 		blackHole.Draw(blackHoleShader, camera);
 
@@ -158,7 +162,7 @@ int main()
 		glm::mat4 spaceShipModel = glm::mat4(1.0f);
 		glm::vec3 spaceShipPos = glm::vec3(0.0f, 0.0f, 0.0f);
 		spaceShipModel = glm::translate(spaceShipModel, spaceShipPos);
-		spaceShipModel = glm::scale(spaceShipModel, glm::vec3(0.2f, 0.2f, 0.2f));
+		spaceShipModel = glm::scale(spaceShipModel, glm::vec3(0.1f, 0.1f, 0.1f));
 		glUniformMatrix4fv(glGetUniformLocation(spaceShipShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(spaceShipModel));
 		spaceShip.Draw(spaceShipShader, camera);
 		//light.DrawMesh(lightShader, camera);
@@ -171,7 +175,7 @@ int main()
 
 
 	// Delete all the objects we've created
-	//blackHoleShader.Delete();
+	blackHoleShader.Delete();
 	spaceShipShader.Delete();
 	/*lightShader.Delete();*/
 	// Delete window before ending the program

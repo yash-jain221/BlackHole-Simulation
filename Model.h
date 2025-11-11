@@ -5,13 +5,13 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include"stb/stb_image.h"
+#include <stb/stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include"Mesh.h"
-#include"shaderClass.h"
+#include "Mesh.h"
+#include "shaderClass.h"
 
 #include <string>
 #include <fstream>
@@ -81,6 +81,7 @@ private:
         {
             processNode(node->mChildren[i], scene);
         }
+
     }
 
     Mesh processMesh(aiMesh* mesh, const aiScene* scene)
@@ -109,18 +110,12 @@ private:
                 vertex.normal = vector;
             }
             // texture coordinates
-            if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-            {
-                glm::vec2 vec;
-                // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-                // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-                vec.x = mesh->mTextureCoords[0][i].x;
-                vec.y = mesh->mTextureCoords[0][i].y;
-                vertex.texUV = vec;
-         
-            }
+            if (mesh->mTextureCoords[0])
+                vertex.texUV = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+            else if (mesh->mTextureCoords[1])
+                vertex.texUV = glm::vec2(mesh->mTextureCoords[1][i].x, mesh->mTextureCoords[1][i].y);
             else
-                vertex.texUV = glm::vec2(0.0f, 0.0f);
+                vertex.texUV = glm::vec2(0, 0);
 
             vertices.push_back(vertex);
         }
@@ -134,12 +129,7 @@ private:
         }
         // process materials
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-        // Same applies to other texture as the following list summarizes:
-        // diffuse: texture_diffuseN
-        // specular: texture_specularN
-        // normal: texture_normalN
+        
 
         // 1. diffuse maps
         vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "diffuse");
@@ -148,10 +138,10 @@ private:
         vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "normal");
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "height");
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT, "height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
         // return a mesh object created from the extracted mesh data
@@ -167,6 +157,7 @@ private:
         {
             aiString str;
             mat->GetTexture(type, i, &str);
+            cout << "Loading Texture: " << str.C_Str() << " type: " << typeName << endl;
             // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
             bool skip = false;
             for (unsigned int j = 0; j < textures_loaded.size(); j++)
@@ -195,7 +186,7 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
     string filename = string(path);
     filename = directory + '/' + filename;
 
-    unsigned int textureID;
+    GLuint textureID;
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;

@@ -141,34 +141,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Assignment_2\Camera.cpp" />
-    <ClCompile Include="..\Assignment_2\EBO.cpp" />
-    <ClCompile Include="..\Assignment_2\Main.cpp" />
-    <ClCompile Include="..\Assignment_2\Mesh.cpp" />
-    <ClCompile Include="..\Assignment_2\shaderClass.cpp" />
-    <ClCompile Include="..\Assignment_2\stb.cpp" />
-    <ClCompile Include="..\Assignment_2\Texture.cpp" />
-    <ClCompile Include="..\Assignment_2\VAO.cpp" />
-    <ClCompile Include="..\Assignment_2\VBO.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="shaderClass.cpp" />
+    <ClCompile Include="stb.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="VAO.cpp" />
+    <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Assignment_2\Camera.h" />
-    <ClInclude Include="..\Assignment_2\EBO.h" />
-    <ClInclude Include="..\Assignment_2\Mesh.h" />
-    <ClInclude Include="..\Assignment_2\Model.h" />
-    <ClInclude Include="..\Assignment_2\shaderClass.h" />
-    <ClInclude Include="..\Assignment_2\Texture.h" />
-    <ClInclude Include="..\Assignment_2\VAO.h" />
-    <ClInclude Include="..\Assignment_2\VBO.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="EBO.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="shaderClass.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="VAO.h" />
+    <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assignment_2\default.frag" />
-    <None Include="..\Assignment_2\default.vert" />
-    <None Include="..\Assignment_2\light.frag" />
-    <None Include="..\Assignment_2\light.vert" />
     <None Include="bh.frag" />
     <None Include="bh.vert" />
+    <None Include="default.frag" />
+    <None Include="default.vert" />
+    <None Include="light.frag" />
+    <None Include="light.vert" />
     <None Include="ss.frag" />
     <None Include="ss.vert" />
   </ItemGroup>
