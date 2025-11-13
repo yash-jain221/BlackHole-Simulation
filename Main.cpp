@@ -1,39 +1,10 @@
 
 
 #include"Model.h"
-
+//#include"spacebox.h"
+#include "HDRLoad.h"
 const unsigned int width = 1600;
 const unsigned int height = 1600;
-
-
-//Vertex lightVertices[] = 
-//{ //     COORDINATES     //
-//	Vertex{glm::vec3(-0.1f, -0.1f, 0.1f)},
-//	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
-//	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
-//	Vertex{glm::vec3(0.1f, -0.1f, 0.1f)},
-//	Vertex{glm::vec3(-0.1f, 0.1f,  0.1f)},
-//	Vertex{glm::vec3(-0.1f, 0.1f, -0.1f)},
-//	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
-//	Vertex{glm::vec3(0.1f,  0.1f, 0.1f)}
-//
-//};
-//
-//GLuint lightIndices[] =
-//{
-//	0, 1, 2,
-//	0, 2, 3,
-//	0, 4, 7,
-//	0, 7, 3,
-//	3, 7, 6,
-//	3, 6, 2,
-//	2, 6, 5,
-//	2, 5, 1,
-//	1, 5, 4,
-//	1, 4, 0,
-//	4, 5, 6,
-//	4, 6, 7
-//};
 
 
 int main()
@@ -41,146 +12,152 @@ int main()
 	// Initialize GLFW
 	glfwInit();
 
-	// Tell GLFW what version of OpenGL we are using 
-	// In this case we are using OpenGL 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	// Tell GLFW we are using the CORE profile
-	// So that means we only have the modern functions
+	
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
 	GLFWwindow* window = glfwCreateWindow(width, height, "YoutubeOpenGL", NULL, NULL);
-	// Error check if the window fails to create
+	
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	// Introduce the window into the current context
+	
 	glfwMakeContextCurrent(window);
 
-	// Load GLAD so it configures OpenGL
 	gladLoadGL();
-	// Specify the viewport of OpenGL in the Window
-	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
+	
 	glViewport(0, 0, 1600, 1600);
 
+	Shader spaceShader("space.vert", "space.frag");
 	Shader blackHoleShader("bh.vert", "bh.frag");
 	Shader spaceShipShader("ss.vert", "ss.frag");
+	Shader marsShader("planet.vert", "planet.frag");
 
-	//// Original code from the tutorial
-	//Texture textures[]
-	//{
-	//	Texture("brick.png", "diffuse", 1, GL_RGBA, GL_UNSIGNED_BYTE),
-	//};
+	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-
-	//// Generates Shader object using shaders default.vert and default.frag
-	//Shader shaderProgram("default.vert", "default.frag");
-	//// Store mesh data in vectors for the mesh
-	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	//std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-	////// Create floor mesh
-	//Mesh floor(verts, ind, tex);
-
-
-	////// Shader for light cube
-	//Shader lightShader("light.vert", "light.frag");
-	////// Store mesh data in vectors for the mesh
-	//std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
-	//std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
-	////// Create light mesh
-
-	//Mesh light(lightVerts, lightInd, tex);
-
-	//glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	//glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
-	//glm::mat4 lightModel = glm::mat4(1.0f);
-	//lightModel = glm::translate(lightModel, lightPos);
-
-	//glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	//glm::mat4 objectModel = glm::mat4(1.0f);
-	//objectModel = glm::translate(objectModel, objectPos);
-
-
-	/*lightShader.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
-	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);*/
-
-	/*shaderProgram.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);*/
-
-
-
-
-
-
-
-	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
-	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+	// Enables Cull Facing
+	//glEnable(GL_CULL_FACE);
+	//// Keeps front faces
+	//glCullFace(GL_FRONT);
+	//// Uses counter clock-wise standard
+	//glFrontFace(GL_CCW);
 
 	Model blackHole = Model("bh/BlackHole.obj");
 	Model spaceShip = Model("spaceship/spaceship.obj");
+	Model Mars = Model("mars/mars.obj");
 
+	/*Shader hdrShader("hdr_sphere.vert", "hdr_sphere.frag");
+	HDRLoad hdr(hdrShader, "space_env.hdr");*/
+	//Model spaceBox = Model("space_env.hdr");
 	// Main while loop
+
+	/*vector<string> faces = {
+		"spacebox/right.png",
+		"spacebox/left.png",
+		"spacebox/up.png",
+		"spacebox/down.png",
+		"spacebox/front.png",
+		"spacebox/back.png"
+	};
+
+	SpaceBox space(faces);*/
+
 	while (!glfwWindowShouldClose(window))
 	{
-		// Specify the color of the background
+		
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//// Handles camera inputs
 		camera.Inputs(window);
-		//// Updates and exports the camera matrix to the Vertex Shader
+		
 		camera.updateMatrix(45.0f, 0.1f, 10000.0f);
 
-		//// Draws different meshes
-		//floor.DrawMesh(shaderProgram, camera);
+		//spacebox
+		/*spaceShader.Activate();
+		spaceBox.Draw(spaceShader, camera);*/
+		/*spaceShader.Activate();
+		camera.createMatrix(spaceShader, "camMatrix");
+		hdr.Draw();*/
+
+		float time = glfwGetTime();
+
+		//blackhole
 		blackHoleShader.Activate();
 		glm::mat4 modelObject = glm::mat4(1.0f);
 		glm::vec3 modelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 		modelObject = glm::translate(modelObject, modelPos);
-		modelObject = glm::rotate(modelObject, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		modelObject = glm::scale(modelObject, glm::vec3(0.5f, 0.5f, 0.5f));
-
-		modelPos = glm::vec3(100.0f, 200.0f, -5000.0f);
+		//modelObject = glm::rotate(modelObject, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		modelObject = glm::scale(modelObject, glm::vec3(1.0f, 1.0f, 1.0f));
+		modelPos = glm::vec3(0.0f, 0.0f, -5000.0f);
 		modelObject = glm::translate(modelObject, modelPos);
-		 
+
+		glm::mat4 parent = modelObject;
+
 		glUniformMatrix4fv(glGetUniformLocation(blackHoleShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelObject));
 		blackHole.Draw(blackHoleShader, camera);
 
+		// planet
+		marsShader.Activate();
+		glm::mat4 marsModel = glm::mat4(1.0f);
+		glm::vec3 marsPos = glm::vec3(0.0f, 0.0f, 0.0f);
+		marsModel = glm::translate(marsModel, marsPos);
+
+		marsModel = glm::rotate(marsModel, 0.5f * time * glm::radians(50.0f), glm::vec3(0, 1, 0));
+		marsPos = glm::vec3(0.0f, 0.0f, 5000.0f);
+		glm::mat4 marsModelNoScale = glm::translate(marsModel, marsPos);
+		marsModel = glm::scale(marsModelNoScale, glm::vec3(50.0f, 50.0f, 50.0f));
+
+		glm::mat4 finalmarsModel = parent * marsModel;
+
+		glUniformMatrix4fv(glGetUniformLocation(marsShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(finalmarsModel));
+		Mars.Draw(marsShader, camera);
+
+
+		// spaceship
 		spaceShipShader.Activate();
 		glm::mat4 spaceShipModel = glm::mat4(1.0f);
 		glm::vec3 spaceShipPos = glm::vec3(0.0f, 0.0f, 0.0f);
 		spaceShipModel = glm::translate(spaceShipModel, spaceShipPos);
-		spaceShipModel = glm::scale(spaceShipModel, glm::vec3(0.1f, 0.1f, 0.1f));
-		glUniformMatrix4fv(glGetUniformLocation(spaceShipShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(spaceShipModel));
+
+		
+
+		// orbit the ship around Y-axis
+		spaceShipModel = glm::rotate(spaceShipModel, time * glm::radians(50.0f), glm::vec3(0, 1, 0));
+		spaceShipModel = glm::scale(spaceShipModel, glm::vec3(0.001f, 0.001f, 0.001f));
+		spaceShipPos = glm::vec3(80000.0f, 0.0f, 500.0f);
+		spaceShipModel = glm::translate(spaceShipModel, spaceShipPos);
+
+		glm::mat4 finalSpaceShipModel = parent * marsModelNoScale * spaceShipModel;
+
+		glm::vec3 spaceshipPos = glm::vec3(finalSpaceShipModel[3]);
+		glm::vec3 spaceshipForward = glm::normalize(-glm::vec3(finalSpaceShipModel[2]));
+
+		// Update camera to follow the ship
+		camera.Position = spaceshipPos - spaceshipForward * 10.0f + glm::vec3(0.0f, 2.0f, 0.0f);
+		camera.Orientation = spaceshipForward;
+		camera.updateMatrix(45.0f, 0.1f, 10000.0f);
+
+		glUniformMatrix4fv(glGetUniformLocation(spaceShipShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(finalSpaceShipModel));
 		spaceShip.Draw(spaceShipShader, camera);
-		//light.DrawMesh(lightShader, camera);
-		// Swap the back buffer with the front buffer
+		
+		glDepthFunc(GL_LESS);
 		glfwSwapBuffers(window);
-		// Take care of all GLFW events
 		glfwPollEvents();
 	}
 
-
-
-	// Delete all the objects we've created
 	blackHoleShader.Delete();
 	spaceShipShader.Delete();
-	/*lightShader.Delete();*/
-	// Delete window before ending the program
+	marsShader.Delete();
+
+	spaceShader.Delete();
+	
 	glfwDestroyWindow(window);
-	// Terminate GLFW before ending the program
 	glfwTerminate();
 	return 0;
 }
