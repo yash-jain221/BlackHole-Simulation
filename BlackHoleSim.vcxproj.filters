@@ -48,6 +48,9 @@
     <ClCompile Include="EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HDRLoad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture.h">
@@ -74,6 +77,12 @@
     <ClInclude Include="VBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="spacebox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HDRLoad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="bh.frag">
@@ -98,6 +107,18 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="light.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="space.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="space.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="planet.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="planet.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

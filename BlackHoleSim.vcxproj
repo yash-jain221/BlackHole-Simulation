@@ -144,6 +144,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="HDRLoad.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="shaderClass.cpp" />
@@ -155,9 +156,11 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="HDRLoad.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="shaderClass.h" />
+    <ClInclude Include="spacebox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
@@ -169,6 +172,10 @@
     <None Include="default.vert" />
     <None Include="light.frag" />
     <None Include="light.vert" />
+    <None Include="planet.frag" />
+    <None Include="planet.vert" />
+    <None Include="space.frag" />
+    <None Include="space.vert" />
     <None Include="ss.frag" />
     <None Include="ss.vert" />
   </ItemGroup>

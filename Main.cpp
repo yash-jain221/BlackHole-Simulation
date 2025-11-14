@@ -17,7 +17,7 @@ int main()
 	
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, "YoutubeOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(width, height, "BlackHole Simulation", NULL, NULL);
 	
 	if (window == NULL)
 	{
@@ -32,41 +32,21 @@ int main()
 	
 	glViewport(0, 0, 1600, 1600);
 
+
 	Shader spaceShader("space.vert", "space.frag");
 	Shader blackHoleShader("bh.vert", "bh.frag");
-	Shader spaceShipShader("ss.vert", "ss.frag");
 	Shader marsShader("planet.vert", "planet.frag");
+	Shader spaceShipShader("ss.vert", "ss.frag");
 
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	glEnable(GL_DEPTH_TEST);
 
-	// Enables Cull Facing
-	//glEnable(GL_CULL_FACE);
-	//// Keeps front faces
-	//glCullFace(GL_FRONT);
-	//// Uses counter clock-wise standard
-	//glFrontFace(GL_CCW);
-
-	Model blackHole = Model("bh/BlackHole.obj");
-	Model spaceShip = Model("spaceship/spaceship.obj");
+	HDRLoad spaceBox(spaceShader, "space_env.hdr");
+	Model blackHole = Model("blackhole/blackhole.obj");
 	Model Mars = Model("mars/mars.obj");
+	Model spaceShip = Model("spaceship/spaceship.obj");
 
-	/*Shader hdrShader("hdr_sphere.vert", "hdr_sphere.frag");
-	HDRLoad hdr(hdrShader, "space_env.hdr");*/
-	//Model spaceBox = Model("space_env.hdr");
-	// Main while loop
-
-	/*vector<string> faces = {
-		"spacebox/right.png",
-		"spacebox/left.png",
-		"spacebox/up.png",
-		"spacebox/down.png",
-		"spacebox/front.png",
-		"spacebox/back.png"
-	};
-
-	SpaceBox space(faces);*/
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -75,78 +55,112 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		camera.Inputs(window);
-		
-		camera.updateMatrix(45.0f, 0.1f, 10000.0f);
+		camera.updateMatrix(45.0f, 0.1f, 100000.0f);
 
 		//spacebox
-		/*spaceShader.Activate();
-		spaceBox.Draw(spaceShader, camera);*/
-		/*spaceShader.Activate();
+		glDepthMask(GL_FALSE);   // Disable depth writing
+		glDepthFunc(GL_LEQUAL);
+
+		spaceShader.Activate();
+		glm::mat4 spaceTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 spaceScaling = glm::scale(glm::mat4(1.0f), glm::vec3(100000.0f));
+		glm::mat4 spaceModel = spaceTranslation* spaceScaling;
+		glm::vec3 spacePos = glm::vec3(spaceModel[3]);
+
+		glUniformMatrix4fv(glGetUniformLocation(spaceShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(spaceModel));
 		camera.createMatrix(spaceShader, "camMatrix");
-		hdr.Draw();*/
+		spaceBox.Draw();
+
+		glDepthMask(GL_TRUE);    // Re-enable depth writing
+		glDepthFunc(GL_LESS);
 
 		float time = glfwGetTime();
 
 		//blackhole
 		blackHoleShader.Activate();
-		glm::mat4 modelObject = glm::mat4(1.0f);
-		glm::vec3 modelPos = glm::vec3(0.0f, 0.0f, 0.0f);
-		modelObject = glm::translate(modelObject, modelPos);
-		//modelObject = glm::rotate(modelObject, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		modelObject = glm::scale(modelObject, glm::vec3(1.0f, 1.0f, 1.0f));
-		modelPos = glm::vec3(0.0f, 0.0f, -5000.0f);
-		modelObject = glm::translate(modelObject, modelPos);
+		glm::mat4 blackHoleTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 blackHoleRotationX = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0));
+		glm::mat4 blackHoleRotationZ = glm::rotate(glm::mat4(1.0f), 0.1f * time * glm::radians(10.0f), glm::vec3(0, 0, 1));
+		glm::mat4 blackHoleScaling = glm::scale(glm::mat4(1.0f), glm::vec3(75.0f, 75.0f, 75.0f));
 
-		glm::mat4 parent = modelObject;
+		glm::mat4 blackHoleModel = blackHoleRotationZ * blackHoleRotationX * blackHoleTranslation * blackHoleScaling;
+		glm::mat4 parent = blackHoleTranslation;
 
-		glUniformMatrix4fv(glGetUniformLocation(blackHoleShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelObject));
+		glUniformMatrix4fv(glGetUniformLocation(blackHoleShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(blackHoleModel));
 		blackHole.Draw(blackHoleShader, camera);
+
 
 		// planet
 		marsShader.Activate();
-		glm::mat4 marsModel = glm::mat4(1.0f);
-		glm::vec3 marsPos = glm::vec3(0.0f, 0.0f, 0.0f);
-		marsModel = glm::translate(marsModel, marsPos);
+		glm::mat4 planetOrbit = glm::rotate(glm::mat4(1.0f), 0.1f * time * glm::radians(25.0f), glm::vec3(0, 1, 0));
+		glm::mat4 planetTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -500.0f));
+		glm::mat4 planetScale = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f));
 
-		marsModel = glm::rotate(marsModel, 0.5f * time * glm::radians(50.0f), glm::vec3(0, 1, 0));
-		marsPos = glm::vec3(0.0f, 0.0f, 5000.0f);
-		glm::mat4 marsModelNoScale = glm::translate(marsModel, marsPos);
-		marsModel = glm::scale(marsModelNoScale, glm::vec3(50.0f, 50.0f, 50.0f));
+		glm::mat4 planetModel = parent * planetOrbit * planetTranslation * planetScale;
+		glm::mat4 planetTransformNoScale = planetOrbit * planetTranslation;
 
-		glm::mat4 finalmarsModel = parent * marsModel;
-
-		glUniformMatrix4fv(glGetUniformLocation(marsShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(finalmarsModel));
+		glUniformMatrix4fv(glGetUniformLocation(marsShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(planetModel));
 		Mars.Draw(marsShader, camera);
-
 
 		// spaceship
 		spaceShipShader.Activate();
-		glm::mat4 spaceShipModel = glm::mat4(1.0f);
-		glm::vec3 spaceShipPos = glm::vec3(0.0f, 0.0f, 0.0f);
-		spaceShipModel = glm::translate(spaceShipModel, spaceShipPos);
+	
+		glm::mat4 spaceShipTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -50.0f)); // translate to origin
+		glm::mat4 spaceShipRotation = glm::rotate(glm::mat4(1.0f), 0.5f * time * glm::radians(50.0f), glm::vec3(0, 1, 0)); // rotate around mars
+		glm::mat4 spaceShipScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.001f, 0.001f, 0.001f));	// scale down
+
+		glm::mat4 spaceShipModel = spaceShipRotation * spaceShipTranslation * spaceShipScale;
+		glm::mat4 finalSpaceShipModel = parent * planetTransformNoScale * spaceShipModel;
+
+		glUniformMatrix4fv(glGetUniformLocation(spaceShipShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(finalSpaceShipModel));
+		spaceShip.Draw(spaceShipShader, camera);
+
 
 		
+		//glm::vec3 planetPos = glm::vec3(0.0f);
+		//float orbitRadius = 80000.0f;
 
-		// orbit the ship around Y-axis
-		spaceShipModel = glm::rotate(spaceShipModel, time * glm::radians(50.0f), glm::vec3(0, 1, 0));
-		spaceShipModel = glm::scale(spaceShipModel, glm::vec3(0.001f, 0.001f, 0.001f));
-		spaceShipPos = glm::vec3(80000.0f, 0.0f, 500.0f);
-		spaceShipModel = glm::translate(spaceShipModel, spaceShipPos);
+		//// 1?? Compute orbit position (ship’s current world-space position)
+		//glm::vec3 shipPos;
+		//shipPos.x = orbitRadius * cos(glm::radians(time * 50.0f)); // orbit around Y
+		//shipPos.y = 0.0f;
+		//shipPos.z = orbitRadius * sin(glm::radians(time * 50.0f));
 
-		glm::mat4 finalSpaceShipModel = parent * marsModelNoScale * spaceShipModel;
+		//// 2?? Define planet “up” direction (axis of orbit)
+		//glm::vec3 up = glm::vec3(0, 1, 0);
+
+		//// 3?? Radial direction (from planet to ship)
+		//glm::vec3 toPlanet = glm::normalize(planetPos - shipPos);
+
+		//// 4?? Tangent direction (direction of motion, along orbit)
+		//glm::vec3 forward = glm::normalize(glm::cross(up, toPlanet));
+
+		//// 5?? Recompute orthogonal right axis
+		//glm::vec3 right = glm::normalize(glm::cross(forward, up));
+
+		//// 6?? Build rotation matrix (ship orientation)
+		//glm::mat4 orientation = glm::mat4(
+		//	glm::vec4(right, 0.0f),
+		//	glm::vec4(up, 0.0f),
+		//	glm::vec4(-forward, 0.0f), // -Z is “forward” in most models
+		//	glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+		//);
+
+		//// 7?? Combine transforms: translate then apply orientation and scale
+		//glm::mat4 translation = glm::translate(glm::mat4(1.0f), shipPos);
+		//glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.001f));
+
+		//glm::mat4 spaceShipModel = translation * orientation * scale;
 
 		glm::vec3 spaceshipPos = glm::vec3(finalSpaceShipModel[3]);
 		glm::vec3 spaceshipForward = glm::normalize(-glm::vec3(finalSpaceShipModel[2]));
 
 		// Update camera to follow the ship
-		camera.Position = spaceshipPos - spaceshipForward * 10.0f + glm::vec3(0.0f, 2.0f, 0.0f);
+		/*camera.Position = spaceshipPos - spaceshipForward * 10.0f + glm::vec3(2.0f, -2.0f, 0.0f);
 		camera.Orientation = spaceshipForward;
-		camera.updateMatrix(45.0f, 0.1f, 10000.0f);
+		camera.updateMatrix(45.0f, 0.1f, 100000.0f);*/
+	
 
-		glUniformMatrix4fv(glGetUniformLocation(spaceShipShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(finalSpaceShipModel));
-		spaceShip.Draw(spaceShipShader, camera);
-		
-		glDepthFunc(GL_LESS);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -154,8 +168,8 @@ int main()
 	blackHoleShader.Delete();
 	spaceShipShader.Delete();
 	marsShader.Delete();
-
 	spaceShader.Delete();
+	spaceBox.Cleanup();
 	
 	glfwDestroyWindow(window);
 	glfwTerminate();
