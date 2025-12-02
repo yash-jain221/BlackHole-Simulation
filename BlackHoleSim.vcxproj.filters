@@ -77,9 +77,6 @@
     <ClInclude Include="VBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="spacebox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HDRLoad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -119,6 +116,27 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="planet.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="fb.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="fb.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="bright_tex.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="blur.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="combine.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="nebula.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="nebula.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

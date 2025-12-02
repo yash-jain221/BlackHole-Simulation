@@ -1,8 +1,8 @@
 #version 330 core
-out vec4 FragColor;
-
+layout(location = 0) out vec4 outColor0;
+layout(location = 1) out vec4 outBright;
 in vec2 texCoord;
-
+out float bhMask;
 uniform sampler2D diffuse[16]; // up to 16 textures
 uniform int diffuseCount;
 uniform sampler2D specular[16]; // up to 16 textures
@@ -23,5 +23,7 @@ void main()
     vec3 color = d;
     color += d * s * 0.5;
 
-    FragColor = vec4(color, 1.0);
+    outColor0 = vec4(color, 1.0);
+    outBright = vec4(color, 1.0);
+    bhMask=0.0f;
 }
